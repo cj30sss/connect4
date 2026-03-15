@@ -517,11 +517,23 @@ sb.auth.onAuthStateChange(async (event, session) => {
     await loadOrCreatePlayer();
     updateNavUser();
     updateStatsUI();
+    updatePlayerBars();
+    // If on profile page, switch to profile view
+    if (document.getElementById('page-profile').classList.contains('active')) {
+      document.getElementById('auth-view').style.display = 'none';
+      document.getElementById('profile-view').style.display = '';
+      updateProfileView();
+    }
   } else {
     playerRecord = null;
     updateNavUser();
     loadLocalStats();
     updateStatsUI();
+    // If on profile page, switch back to auth view
+    if (document.getElementById('page-profile').classList.contains('active')) {
+      document.getElementById('auth-view').style.display = '';
+      document.getElementById('profile-view').style.display = 'none';
+    }
   }
 });
 
@@ -596,7 +608,7 @@ async function doLogin() {
   const { error } = await sb.auth.signInWithPassword({ email, password: pass });
   btn.disabled=false; btn.textContent='Sign In';
   if (error) { showAuthError('login-error', error.message); return; }
-  showPage('play');
+  showPage('profile');
 }
 
 async function doSignup() {
